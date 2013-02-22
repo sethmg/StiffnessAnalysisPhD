@@ -2,7 +2,7 @@ clc
 clear all
 close all
 
-inputFile = 'StiffnessComparisons-2.txt';
+inputFile = '../StiffnessComparisons-2.txt';
 if ~exist(inputFile,'file')                                                 % if the input file is not in the root dir, get the user to find it for you
     [inputFileName,inputPathName] = uigetfile('*.txt','The input file could not be found. Please select the stiffness comparisons file');
     inputFile = [inputPathName,inputFileName];
@@ -69,7 +69,7 @@ osteoporotic_bothValid( H1268L_index ) = 0;
 %% Loading Rate Plots
 delta_Stiffness = DT_Stiffness - In_Stiffness;
 % plotPositions = get(0,'screensize');
-plotPositions = [        1756         115        1534         829];
+plotPositions = [         21          40        1628         904];
 
 
 % Plot Change in stiffness, grouped by OP status
@@ -239,6 +239,30 @@ set(barH2,'barWidth',25)
 whiskerX = [get(barH2,'Xdata') get(barH2,'Xdata')];
 whiskerY = [get(barH2,'Ydata')+ std(DT_Stiffness(find(DT_LoadingRate < 0.2 & dtValid)))/1000000 get(barH2,'Ydata')-std(DT_Stiffness(find(DT_LoadingRate < 0.2 & dtValid)))/1000000];
 plot(a8H,whiskerX,whiskerY,'k','linewidth',3)
+
+% % Plot the DT stiffness on the x and Ins on the Y, along with a line of y = x
+fH9 = figure(9);
+aH9 = axes;
+hold on;
+plot(aH9,DT_Stiffness(osteoporotic_bothValid)./1000000, In_Stiffness(osteoporotic_bothValid)./1000000,'rx','markersize',20,'linewidth',5)
+plot(aH9,DT_Stiffness(osteopenic_bothValid)./1000000, In_Stiffness(osteopenic_bothValid)./1000000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5)
+plot(aH9,DT_Stiffness(normal_bothValid)./1000000, In_Stiffness(normal_bothValid)./1000000,'go','markersize',20','linewidth',5)
+axis square
+xlim([0 6]);
+ylim([0 6]);
+ezH9 = ezplot('x',[0 6]);
+set(ezH9,'linewidth',3);
+set(fH9,'position',plotPositions,'paperpositionmode','auto');
+grid
+set(aH9,'Fontname','times','fontsize',40);
+xlabel('Fall Simulator Stiffness (kN/mm)','fontname','times','fontsize',40);
+ylabel('Quasi-Static Stiffness (kN/mm)','fontname','times','fontsize',40);
+set(aH9,'xtick',get(aH9,'ytick'),'xticklabel',get(aH9,'yticklabel'));
+set(get(aH9,'title'),'string',[])
+legend('Osteoporotic','Osteopenic','Normal');
+print(fH9,'../DT_StiffnessVsIn_Stiffness_HighRes.png','-r300','-dpng');
+print(fH9,'../DT_StiffnessVsIn_Stiffness_LowhRes.png','-r100','-dpng');
+saveas(fH9,'../DT_StiffnessVsIn_Stiffness.fig');
 
 %% Statistics based on OP Status groups
 
