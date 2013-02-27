@@ -73,140 +73,140 @@ plotPositions = [         21          40        1628         904];
 
 
 % Plot Change in stiffness, grouped by OP status
-deltaOPFH = figure(1);
-set(deltaOPFH,'position',plotPositions,'paperpositionMode','auto');
-deltaOPAH = axes;
-hold on
-plot(deltaOPAH,DT_LoadingRate(normal_bothValid)*1000,delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(deltaOPAH,DT_LoadingRate(osteopenic_bothValid)*1000,delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(deltaOPAH,DT_LoadingRate(osteoporotic_bothValid)*1000,delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-grid
-set(deltaOPAH,'Fontname','times','fontsize',40)
-xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
-ylabel('Change in Stiffness (N/mm)','Fontname','times','fontsize',45)
-xlim([0 800])
-deltaOPLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
-% fit the pooled dataset
-% [lR_dSFit,lR_dS_goodness] = fit(DT_LoadingRate*1000,delta_Stiffness/1000,'poly1');
-[lR_dSFit,lR_dS_goodness] = fit(DT_LoadingRate(bothValid),delta_Stiffness(bothValid),'poly1');
-if lR_dS_goodness.rsquare > 0.2
-    hold on
-    plot(sort(DT_LoadingRate(bothValid)*1000),feval(lR_dSFit,sort(DT_LoadingRate(bothValid)))/1000,'k','linewidth',2)
-    %text(700,0,sprintf('%0.3f * Loading Rate + %0.0f, r^2 = %0.3f',lR_dSFit.p1,lR_dSFit.p2,lR_dS_goodness.rsquare),'fontname','times','fontsize',20);
-end
- 
-% Plot change in stiffness relative to the instron stiffness, grouped by OP status
-relOPFH = figure(2);
-set(relOPFH,'position',plotPositions,'paperpositionMode','auto');
-relOPAH = axes;
-hold on
-plot(relOPAH,DT_LoadingRate(normal_bothValid)*1000,delta_Stiffness(normal_bothValid)./In_Stiffness(normal_bothValid)*100,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(relOPAH,DT_LoadingRate(osteopenic_bothValid)*1000,delta_Stiffness(osteopenic_bothValid)./In_Stiffness(osteopenic_bothValid)*100,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(relOPAH,DT_LoadingRate(osteoporotic_bothValid)*1000,delta_Stiffness(osteoporotic_bothValid)./In_Stiffness(osteoporotic_bothValid)*100,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-grid
-set(relOPAH,'Fontname','times','fontsize',40)
-xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
-ylabel('$\frac{Stiffness_{(DT)}-Stiffness_{(Instron)}}{Stiffness_{(Instron)}} * 100$','Fontname','times','fontsize',45,'interpreter','latex')
-xlim([0 800])
-relOPLH = legend('WHO Normal aBMD','WHO Osteopenic');%,'WHO Osteoporotic');
-% fit the pooled dataset
-[lR_rSFit,lR_rS_goodness] = fit(DT_LoadingRate(bothValid),(delta_Stiffness(bothValid)./In_Stiffness(bothValid)),'poly1');
-if lR_rS_goodness.rsquare > 0.2
-    hold on
-    plot(relOPAH,sort(DT_LoadingRate(bothValid))*1000,feval(lR_rSFit,sort(DT_LoadingRate(bothValid)))*100,'k','linewidth',2)
-    %text(100,-80,sprintf('%0.3f * Loading Rate (m/s) + %0.0f, r^2 = %0.3f',lR_rSFit.p1,lR_rSFit.p2,lR_rS_goodness.rsquare),'fontname','times','fontsize',20);
-end
-cPosition = get(relOPAH,'position');
-cPosition(1) = .15;
-cPosition(3) = .78;
-set(relOPAH,'position',cPosition)
-
-% Plot max force grouped by OP status
-maxOPFH = figure(3);
-set(maxOPFH,'position',plotPositions,'paperpositionMode','auto');
-maxOPAH = axes;
-hold on
-plot(maxOPAH,DT_LoadingRate(normal_dtValid)*1000,DT_Max(normal_dtValid)/1000,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(maxOPAH,DT_LoadingRate(osteopenic_dtValid)*1000,DT_Max(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(maxOPAH,DT_LoadingRate(osteoporotic_dtValid)*1000,DT_Max(osteoporotic_dtValid)/1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-grid
-set(maxOPAH,'Fontname','times','fontsize',40)
-xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
-ylabel('Max Force (kN)','Fontname','times','fontsize',45)
-xlim([0 800])
-maxOPLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
-
-
-%% Bone Density Plots
-% Plot max force grouped by OP status
-maxFH = figure(4);
-set(maxFH,'position',plotPositions,'paperpositionMode','auto');
-maxAH = axes;
-hold on
-plot(maxAH,DXA(normal_dtValid),DT_Max(normal_dtValid)/1000,'go','markersize',20,'linewidth',5);
-plot(maxAH,DXA(osteopenic_dtValid),DT_Max(osteopenic_dtValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
-plot(maxAH,DXA(osteoporotic_dtValid),DT_Max(osteoporotic_dtValid)/1000,'rx','markersize',20,'linewidth',5);
-grid
-set(maxAH,'Fontname','times','fontsize',40)
-xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
-ylabel('Max Force (kN)','Fontname','times','fontsize',45)
-maxLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
-% fit the pooled dataset
-[ro_mFFit,ro_mF_goodness] = fit(DXA(dtValid),DT_Max(dtValid),'poly1');
-if ro_mF_goodness.rsquare > 0.2
-    hold on
-    plot(maxAH,sort(DXA(dtValid)),feval(ro_mFFit,sort(DXA(dtValid)))/1000,'k','linewidth',2)
-    %text(.75,2500,sprintf('%0.0f * DXA + %0.0f, r^2 = %0.3f',ro_mFFit.p1,ro_mFFit.p2,ro_mF_goodness.rsquare),'fontname','times','fontsize',20);
-end
-
-% Plot loading rate, grouped by OP status
-rateFH = figure(5);
-set(rateFH,'position',plotPositions,'paperpositionMode','auto');
-rateAH = axes;
-hold on
-plot(rateAH,DXA(normal_dtValid),DT_LoadingRate(normal_dtValid)*1000,'og','markersize',20,'linewidth',5); % dxa in g/cm^2, rate in mm/s
-plot(rateAH,DXA(osteopenic_dtValid),DT_LoadingRate(osteopenic_dtValid)*1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-plot(rateAH,DXA(osteoporotic_dtValid),DT_LoadingRate(osteoporotic_dtValid)*1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
-grid
-set(rateAH,'Fontname','times','fontsize',40)
-ylabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
-xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
-rateLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
-
-% Plot change in stiffness, grouped by OP status
-diffFH = figure(6);
-set(diffFH,'position',plotPositions,'paperpositionMode','auto');
-diffAH = axes;
-hold on
-plot(diffAH,DXA(normal_bothValid),delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5);
-plot(diffAH,DXA(osteopenic_bothValid),delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
-plot(diffAH,DXA(osteoporotic_bothValid),delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5);
-grid
-set(diffAH,'Fontname','times','fontsize',40)
-xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
-ylabel('Stiffness Change (N/mm)','Fontname','times','fontsize',45)
-diffLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
-
+% deltaOPFH = figure(1);
+% set(deltaOPFH,'position',plotPositions,'paperpositionMode','auto');
+% deltaOPAH = axes;
+% hold on
+% plot(deltaOPAH,DT_LoadingRate(normal_bothValid)*1000,delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(deltaOPAH,DT_LoadingRate(osteopenic_bothValid)*1000,delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(deltaOPAH,DT_LoadingRate(osteoporotic_bothValid)*1000,delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% grid
+% set(deltaOPAH,'Fontname','times','fontsize',40)
+% xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
+% ylabel('Change in Stiffness (N/mm)','Fontname','times','fontsize',45)
+% xlim([0 800])
+% deltaOPLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
+% % fit the pooled dataset
+% % [lR_dSFit,lR_dS_goodness] = fit(DT_LoadingRate*1000,delta_Stiffness/1000,'poly1');
+% [lR_dSFit,lR_dS_goodness] = fit(DT_LoadingRate(bothValid),delta_Stiffness(bothValid),'poly1');
+% if lR_dS_goodness.rsquare > 0.2
+%     hold on
+%     plot(sort(DT_LoadingRate(bothValid)*1000),feval(lR_dSFit,sort(DT_LoadingRate(bothValid)))/1000,'k','linewidth',2)
+%     %text(700,0,sprintf('%0.3f * Loading Rate + %0.0f, r^2 = %0.3f',lR_dSFit.p1,lR_dSFit.p2,lR_dS_goodness.rsquare),'fontname','times','fontsize',20);
+% end
+%  
+% % Plot change in stiffness relative to the instron stiffness, grouped by OP status
+% relOPFH = figure(2);
+% set(relOPFH,'position',plotPositions,'paperpositionMode','auto');
+% relOPAH = axes;
+% hold on
+% plot(relOPAH,DT_LoadingRate(normal_bothValid)*1000,delta_Stiffness(normal_bothValid)./In_Stiffness(normal_bothValid)*100,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(relOPAH,DT_LoadingRate(osteopenic_bothValid)*1000,delta_Stiffness(osteopenic_bothValid)./In_Stiffness(osteopenic_bothValid)*100,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(relOPAH,DT_LoadingRate(osteoporotic_bothValid)*1000,delta_Stiffness(osteoporotic_bothValid)./In_Stiffness(osteoporotic_bothValid)*100,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% grid
+% set(relOPAH,'Fontname','times','fontsize',40)
+% xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
+% ylabel('$\frac{Stiffness_{(DT)}-Stiffness_{(Instron)}}{Stiffness_{(Instron)}} * 100$','Fontname','times','fontsize',45,'interpreter','latex')
+% xlim([0 800])
+% relOPLH = legend('WHO Normal aBMD','WHO Osteopenic');%,'WHO Osteoporotic');
+% % fit the pooled dataset
+% [lR_rSFit,lR_rS_goodness] = fit(DT_LoadingRate(bothValid),(delta_Stiffness(bothValid)./In_Stiffness(bothValid)),'poly1');
+% if lR_rS_goodness.rsquare > 0.2
+%     hold on
+%     plot(relOPAH,sort(DT_LoadingRate(bothValid))*1000,feval(lR_rSFit,sort(DT_LoadingRate(bothValid)))*100,'k','linewidth',2)
+%     %text(100,-80,sprintf('%0.3f * Loading Rate (m/s) + %0.0f, r^2 = %0.3f',lR_rSFit.p1,lR_rSFit.p2,lR_rS_goodness.rsquare),'fontname','times','fontsize',20);
+% end
+% cPosition = get(relOPAH,'position');
+% cPosition(1) = .15;
+% cPosition(3) = .78;
+% set(relOPAH,'position',cPosition)
+% 
+% % Plot max force grouped by OP status
+% maxOPFH = figure(3);
+% set(maxOPFH,'position',plotPositions,'paperpositionMode','auto');
+% maxOPAH = axes;
+% hold on
+% plot(maxOPAH,DT_LoadingRate(normal_dtValid)*1000,DT_Max(normal_dtValid)/1000,'go','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(maxOPAH,DT_LoadingRate(osteopenic_dtValid)*1000,DT_Max(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(maxOPAH,DT_LoadingRate(osteoporotic_dtValid)*1000,DT_Max(osteoporotic_dtValid)/1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% grid
+% set(maxOPAH,'Fontname','times','fontsize',40)
+% xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
+% ylabel('Max Force (kN)','Fontname','times','fontsize',45)
+% xlim([0 800])
+% maxOPLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
+% 
+% 
+% %% Bone Density Plots
+% % Plot max force grouped by OP status
+% maxFH = figure(4);
+% set(maxFH,'position',plotPositions,'paperpositionMode','auto');
+% maxAH = axes;
+% hold on
+% plot(maxAH,DXA(normal_dtValid),DT_Max(normal_dtValid)/1000,'go','markersize',20,'linewidth',5);
+% plot(maxAH,DXA(osteopenic_dtValid),DT_Max(osteopenic_dtValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
+% plot(maxAH,DXA(osteoporotic_dtValid),DT_Max(osteoporotic_dtValid)/1000,'rx','markersize',20,'linewidth',5);
+% grid
+% set(maxAH,'Fontname','times','fontsize',40)
+% xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
+% ylabel('Max Force (kN)','Fontname','times','fontsize',45)
+% maxLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
+% % fit the pooled dataset
+% [ro_mFFit,ro_mF_goodness] = fit(DXA(dtValid),DT_Max(dtValid),'poly1');
+% if ro_mF_goodness.rsquare > 0.2
+%     hold on
+%     plot(maxAH,sort(DXA(dtValid)),feval(ro_mFFit,sort(DXA(dtValid)))/1000,'k','linewidth',2)
+%     %text(.75,2500,sprintf('%0.0f * DXA + %0.0f, r^2 = %0.3f',ro_mFFit.p1,ro_mFFit.p2,ro_mF_goodness.rsquare),'fontname','times','fontsize',20);
+% end
+% 
+% % Plot loading rate, grouped by OP status
+% rateFH = figure(5);
+% set(rateFH,'position',plotPositions,'paperpositionMode','auto');
+% rateAH = axes;
+% hold on
+% plot(rateAH,DXA(normal_dtValid),DT_LoadingRate(normal_dtValid)*1000,'og','markersize',20,'linewidth',5); % dxa in g/cm^2, rate in mm/s
+% plot(rateAH,DXA(osteopenic_dtValid),DT_LoadingRate(osteopenic_dtValid)*1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% plot(rateAH,DXA(osteoporotic_dtValid),DT_LoadingRate(osteoporotic_dtValid)*1000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
+% grid
+% set(rateAH,'Fontname','times','fontsize',40)
+% ylabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
+% xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
+% rateLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
+% 
+% % Plot change in stiffness, grouped by OP status
+% diffFH = figure(6);
+% set(diffFH,'position',plotPositions,'paperpositionMode','auto');
+% diffAH = axes;
+% hold on
+% plot(diffAH,DXA(normal_bothValid),delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5);
+% plot(diffAH,DXA(osteopenic_bothValid),delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
+% plot(diffAH,DXA(osteoporotic_bothValid),delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5);
+% grid
+% set(diffAH,'Fontname','times','fontsize',40)
+% xlabel('DXA (g/cm^2)','Fontname','times','fontsize',45)
+% ylabel('Stiffness Change (N/mm)','Fontname','times','fontsize',45)
+% diffLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
+% 
 % stiffness change bland-altman plot
-meanStiffness = (DT_Stiffness+In_Stiffness)/2;
-f7H = figure(7);
-a7H = axes;
-set(f7H,'position',plotPositions,'paperpositionMode','auto');
-hold on
-plot(a7H,meanStiffness(normal_bothValid)/1000,delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5);
-plot(a7H,meanStiffness(osteopenic_bothValid)/1000,delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
-plot(a7H,meanStiffness(osteoporotic_bothValid)/1000,delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5);
-[delta_mean,delta_sigma,delta_meanci,delta_sigmaci] = normfit(delta_Stiffness(bothValid));
-xlimits = xlim;
-plot(a7H,xlimits,[delta_mean delta_mean]/1000,'k','linewidth',4);
-plot(a7H,xlimits,[delta_meanci(1) delta_meanci(1)]/1000,'color',[.7 .7 .7],'linewidth',4)
-plot(a7H,xlimits,[delta_meanci(2) delta_meanci(2)]/1000,'color',[.7 .7 .7],'linewidth',4)
-xlim(xlimits)
-grid
-set(a7H,'Fontname','times','fontsize',40)
-xlabel('Mean Stiffness (N/mm)','Fontname','times','fontsize',45)
-ylabel('Stiffness Change (N/mm)','Fontname','times','fontsize',45)
-diffLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
+% meanStiffness = (DT_Stiffness+In_Stiffness)/2;
+% f7H = figure(7);
+% a7H = axes;
+% set(f7H,'position',plotPositions,'paperpositionMode','auto');
+% hold on
+% plot(a7H,meanStiffness(normal_bothValid)/1000,delta_Stiffness(normal_bothValid)/1000,'go','markersize',20,'linewidth',5);
+% plot(a7H,meanStiffness(osteopenic_bothValid)/1000,delta_Stiffness(osteopenic_bothValid)/1000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5);
+% plot(a7H,meanStiffness(osteoporotic_bothValid)/1000,delta_Stiffness(osteoporotic_bothValid)/1000,'rx','markersize',20,'linewidth',5);
+% [delta_mean,delta_sigma,delta_meanci,delta_sigmaci] = normfit(delta_Stiffness(bothValid));
+% xlimits = xlim;
+% plot(a7H,xlimits,[delta_mean delta_mean]/1000,'k','linewidth',4);
+% plot(a7H,xlimits,[delta_meanci(1) delta_meanci(1)]/1000,'color',[.7 .7 .7],'linewidth',4)
+% plot(a7H,xlimits,[delta_meanci(2) delta_meanci(2)]/1000,'color',[.7 .7 .7],'linewidth',4)
+% xlim(xlimits)
+% grid
+% set(a7H,'Fontname','times','fontsize',40)
+% xlabel('Mean Stiffness (N/mm)','Fontname','times','fontsize',45)
+% ylabel('Stiffness Change (N/mm)','Fontname','times','fontsize',45)
+% diffLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic','location','northwest');
 
 % plot stiffness vs loading rate, grouped by OP status
 f8H = figure(8);
@@ -218,7 +218,7 @@ plot(a8H,DT_LoadingRate(osteopenic_dtValid)*1000,DT_Stiffness(osteopenic_dtValid
 plot(a8H,DT_LoadingRate(osteoporotic_dtValid)*1000,DT_Stiffness(osteoporotic_dtValid)/1000000,'rx','markersize',20,'linewidth',5); % loading rate in mm/s, siffness in N/mm
 grid
 set(a8H,'Fontname','times','fontsize',40)
-xlabel('Loading Rate (mm/s)','Fontname','times','fontsize',45)
+xlabel('Compression Rate (mm/s)','Fontname','times','fontsize',45)
 ylabel('Stiffness (kN/mm)','Fontname','times','fontsize',45)
 rateLH = legend('WHO Normal aBMD','WHO Osteopenic','WHO Osteoporotic');
 [a8Fit,a8_goodness] = fit(DT_LoadingRate(dtValid),DT_Stiffness(dtValid),'poly1');
@@ -239,30 +239,34 @@ set(barH2,'barWidth',25)
 whiskerX = [get(barH2,'Xdata') get(barH2,'Xdata')];
 whiskerY = [get(barH2,'Ydata')+ std(DT_Stiffness(find(DT_LoadingRate < 0.2 & dtValid)))/1000000 get(barH2,'Ydata')-std(DT_Stiffness(find(DT_LoadingRate < 0.2 & dtValid)))/1000000];
 plot(a8H,whiskerX,whiskerY,'k','linewidth',3)
+print(f8H,'../DT_StiffnessVsLoadingRate_HighRes.png','-r300','-dpng');
+print(f8H,'../DT_StiffnessVsLoadingRate_LowhRes.png','-r100','-dpng');
+saveas(f8H,'../DT_StiffnessVsLoadingRate.fig');
+
 
 % % Plot the DT stiffness on the x and Ins on the Y, along with a line of y = x
-fH9 = figure(9);
-aH9 = axes;
-hold on;
-plot(aH9,DT_Stiffness(osteoporotic_bothValid)./1000000, In_Stiffness(osteoporotic_bothValid)./1000000,'rx','markersize',20,'linewidth',5)
-plot(aH9,DT_Stiffness(osteopenic_bothValid)./1000000, In_Stiffness(osteopenic_bothValid)./1000000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5)
-plot(aH9,DT_Stiffness(normal_bothValid)./1000000, In_Stiffness(normal_bothValid)./1000000,'go','markersize',20','linewidth',5)
-axis square
-xlim([0 6]);
-ylim([0 6]);
-ezH9 = ezplot('x',[0 6]);
-set(ezH9,'linewidth',3);
-set(fH9,'position',plotPositions,'paperpositionmode','auto');
-grid
-set(aH9,'Fontname','times','fontsize',40);
-xlabel('Fall Simulator Stiffness (kN/mm)','fontname','times','fontsize',40);
-ylabel('Quasi-Static Stiffness (kN/mm)','fontname','times','fontsize',40);
-set(aH9,'xtick',get(aH9,'ytick'),'xticklabel',get(aH9,'yticklabel'));
-set(get(aH9,'title'),'string',[])
-legend('Osteoporotic','Osteopenic','Normal');
-print(fH9,'../DT_StiffnessVsIn_Stiffness_HighRes.png','-r300','-dpng');
-print(fH9,'../DT_StiffnessVsIn_Stiffness_LowhRes.png','-r100','-dpng');
-saveas(fH9,'../DT_StiffnessVsIn_Stiffness.fig');
+% fH9 = figure(9);
+% aH9 = axes;
+% hold on;
+% plot(aH9,DT_Stiffness(osteoporotic_bothValid)./1000000, In_Stiffness(osteoporotic_bothValid)./1000000,'rx','markersize',20,'linewidth',5)
+% plot(aH9,DT_Stiffness(osteopenic_bothValid)./1000000, In_Stiffness(osteopenic_bothValid)./1000000,'s','markeredgecolor',[1 .5 .2],'markersize',20,'linewidth',5)
+% plot(aH9,DT_Stiffness(normal_bothValid)./1000000, In_Stiffness(normal_bothValid)./1000000,'go','markersize',20','linewidth',5)
+% ezH9 = ezplot('x',[0 6]);
+% axis square
+% xlim([0 6]);
+% ylim([0 6]);
+% set(ezH9,'linewidth',3);
+% set(fH9,'position',plotPositions,'paperpositionmode','auto');
+% grid
+% set(aH9,'Fontname','times','fontsize',40);
+% xlabel('Fall Simulator Stiffness (kN/mm)','fontname','times','fontsize',40);
+% ylabel('Quasi-Static Stiffness (kN/mm)','fontname','times','fontsize',40);
+% set(aH9,'xtick',get(aH9,'ytick'),'xticklabel',get(aH9,'yticklabel'),'ytick',1:6,'yticklabel',1:6);
+% set(get(aH9,'title'),'string',[])
+% legend('Osteoporotic','Osteopenic','Normal');
+% print(fH9,'../DT_StiffnessVsIn_Stiffness_HighRes.png','-r300','-dpng');
+% print(fH9,'../DT_StiffnessVsIn_Stiffness_LowhRes.png','-r100','-dpng');
+% saveas(fH9,'../DT_StiffnessVsIn_Stiffness.fig');
 
 %% Statistics based on OP Status groups
 
