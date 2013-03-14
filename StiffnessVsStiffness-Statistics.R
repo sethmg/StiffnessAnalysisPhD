@@ -1,7 +1,9 @@
 # analyze the stiffness data
 
 # read in the data file with a header line and the row names contained in column 1
-stiffness <- read.table("../StiffnessComparisons-2.txt",header=T,row.names=1)
+stiffness <- read.table(
+  "/home/seth/Documents/Research/Projects/Open Projects/12-024 Stiffness Analysis/StiffnessComparisons-2.txt",
+  header=T,row.names=1)
 
 # repace the zeros with NAs
 stiffness[stiffness == 0] <- NA
